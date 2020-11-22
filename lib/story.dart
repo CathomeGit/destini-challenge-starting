@@ -8,4 +8,10 @@ class Story {
     _option1 = choice1;
     _option2 = choice2;
   }
+
+  String get option2 => _option2;
+
+  String get option1 => _option1;
+
+  String get title => _title;
 }
