@@ -1,0 +1,1 @@
+enum Option { FirstOption, SecondOption }

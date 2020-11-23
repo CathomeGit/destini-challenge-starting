@@ -1,5 +1,6 @@
 import 'package:destini_challenge_starting/story_brain.dart';
 import 'package:flutter/material.dart';
+import 'option.dart';
 
 void main() => runApp(Destini());
 
@@ -44,47 +45,35 @@ class _StoryPageState extends State<StoryPage> {
                   ),
                 ),
               ),
-              Expanded(
-                flex: 2,
-                child: FlatButton(
-                  onPressed: () {
-                    setState(() {
-                      _storyBrain.nextStory(1);
-                    });
-                  },
-                  color: Colors.red,
-                  child: Text(
-                    _storyBrain.getChoice1(),
-                    style: TextStyle(
-                      fontSize: 20.0,
-                    ),
-                  ),
-                ),
-              ),
+              buildButton(Option.FirstOption, Colors.red),
               SizedBox(
                 height: 20.0,
               ),
-              Expanded(
-                flex: 2,
-                child: Visibility(
-                  visible: _storyBrain.buttonShouldBeVisible(),
-                  child: FlatButton(
-                    onPressed: () {
-                      setState(() {
-                        _storyBrain.nextStory(2);
-                      });
-                    },
-                    color: Colors.blue,
-                    child: Text(
-                      _storyBrain.getChoice2(),
-                      style: TextStyle(
-                        fontSize: 20.0,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+              buildButton(Option.SecondOption, Colors.blue),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Expanded buildButton(Option choice, Color color) {
+    return Expanded(
+      flex: 2,
+      child: Visibility(
+        visible: _storyBrain.buttonShouldBeVisible(choice),
+        child: FlatButton(
+          onPressed: () {
+            setState(() {
+              _storyBrain.nextStory(choice);
+            });
+          },
+          color: color,
+          child: Text(
+            _storyBrain.getChoice(choice),
+            style: TextStyle(
+              fontSize: 20.0,
+            ),
           ),
         ),
       ),
