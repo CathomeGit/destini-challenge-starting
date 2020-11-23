@@ -1,12 +1,8 @@
-
 import 'package:destini_challenge_starting/story.dart';
 
 class StoryBrain {
+  _StoryPlan _storyPlan;
   int _storyNumber = 0;
-  _StoryPlan _storyPlan = _StoryPlan(_Node(
-      0,
-      _Node(2, _Node(5, null, null), _Node(4, null, null)),
-      _Node(1, null, _Node(3, null, null))));
   List<Story> _storyData = [
     Story(
         storyTitle:
@@ -39,25 +35,40 @@ class StoryBrain {
         choice2: '')
   ];
 
+  StoryBrain() {
+    _Node commonPath = _Node(2, _Node(5, null, null), _Node(4, null, null));
+    _storyPlan = _StoryPlan(
+        _Node(0, commonPath, _Node(1, commonPath, _Node(3, null, null))));
+  }
+
   String getStory() {
-    return _storyData[0].title;
+    return _storyData[_storyNumber].title;
   }
 
   String getChoice1() {
-    return _storyData[0].option1;
+    return _storyData[_storyNumber].option1;
   }
 
   String getChoice2() {
-    return _storyData[0].option2;
+    return _storyData[_storyNumber].option2;
   }
 
   void nextStory(int choiceNumber) {
     bool first = choiceNumber == 1 ? true : false;
-    _storyNumber = _storyPlan.move(first);}
+    if (_storyPlan.isEnd(first)) {
+      restart();
+    } else {
+      _storyPlan.move(first);
+    }
+    _storyNumber = _storyPlan.current.value;
+  }
+
+  void restart() {
+    _storyPlan.restart();
+  }
 }
 
 class _StoryPlan {
-  // TODO check visibility of nested props
   _Node root;
   _Node current;
 
@@ -70,11 +81,12 @@ class _StoryPlan {
     return first ? current.first == null : current.second == null;
   }
 
-  int move(bool first) {
-    if (!isEnd(first)) {
-      current = first ? current.first : current.second;
-    }
-    return current.value;
+  void move(bool first) {
+    current = first ? current.first : current.second;
+  }
+
+  void restart() {
+    current = root;
   }
 }
 
@@ -86,10 +98,6 @@ class _Node {
   _Node(this.value, this.first, this.second);
 }
 
-//TODO: Step 23 - Use the storyNumber property inside getStory(), getChoice1() and getChoice2() so that it gets the updated story and choices rather than always just the first (0th) one.
-
 //TODO: Step 25 - Change the storyNumber property into a private property so that only story_brain.dart has access to it. You can do this by right clicking on the name (storyNumber) and selecting Refactor -> Rename to make the change across all the places where it's used.
-
-//TODO: Step 22 - In nextStory() if the storyNumber is equal to 3 or 4 or 5, that means it's the end of the game and it should call a method called restart() that resets the storyNumber to 0.
 
 //TODO: Step 27 - Create a method called buttonShouldBeVisible() which checks to see if storyNumber is 0 or 1 or 2 (when both buttons should show choices) and return true if that is the case, else it should return false.
